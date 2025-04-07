@@ -1,4 +1,5 @@
-# ========== Hand Tracking with MediaPipe Tasks (IMAGE MODE) ==========
+# ========== Hand Tracking with MediaPipe Tasks (LIVE STREAM MODE) ==========
+
 # ===== Import Required Libraries =====
 # MediaPipe Hand Tracking task modules
 import mediapipe as mp
@@ -109,6 +110,20 @@ def draw_landmarks(rgb_frame, detection_result):
     return annotated_frame
 
 
+def process_result(result, output_frame, timestamp_ms):
+    """
+    Callback function to process the result of hand landmark detection.
+
+    Args:
+        result (HandLandmarkerResult): The result of hand landmark detection.
+        output_frame (Image): The output frame to draw on.
+        timestamp_ms (int): The timestamp of the frame in milliseconds.
+    """
+    global latest_frame_result
+    # Get the RGB frame from the result
+    latest_frame_result = (result, output_frame.numpy_view())
+
+
 def main():
     global latest_frame_result
    
@@ -124,9 +139,10 @@ def main():
     # Create a hand landmarker instance with the live stream mode:
     options = HandLandmarkerOptions(
         base_options=BaseOptions(model_asset_path=model_path),  # Path to the model file
-        running_mode=VisionRunningMode.IMAGE,                   # Set the running mode to image
-        num_hands=2                                             # Number of hands to detect (1 or 2)
-       )                                                        # no callback function for image mode
+        running_mode=VisionRunningMode.LIVE_STREAM,             # Set the running mode to live stream
+        num_hands=2,                                            # Number of hands to detect (1 or 2)
+        result_callback=process_result                          # Callback function to process the result
+        )
 
     # Initialize the webcam video capture
     cap = cv2.VideoCapture(0)
@@ -150,20 +166,25 @@ def main():
             # Process the RGB frame to MediaPipe Image format
             mp_frame = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
 
-            # Process the frame with the hand landmarker
-            # Detect hands and landmarks in the frame
-            result = landmarker.detect(mp_frame)
+            # Get the current timestamp in milliseconds
+            timestamp_ms = int(cv2.getTickCount() / cv2.getTickFrequency() * 1000)
 
-            if result is not None:
-                # Draw the landmarks and handedness on the frame
-                annotated_frame = draw_landmarks(rgb_frame, result)
-                # Convert the annotated frame back to BGR format for OpenCV display
-                annotated_frame = cv2.cvtColor(annotated_frame, cv2.COLOR_RGB2BGR)
-                # Display the annotated frame in a window
-                cv2.imshow("Hand Tracking", annotated_frame)
+            # Send the frame data to perform hand landmark detection
+            # This will call the callback function print_result when the result is ready
+            landmarker.detect_async(mp_frame, timestamp_ms)
+
+            # Check if the latest annotated frame is available
+            if latest_frame_result is not None:
+                result, frame = latest_frame_result
+                annotated_frame = draw_landmarks(frame, result)  # Draw landmarks on the frame
+                frame_bgr = cv2.cvtColor(annotated_frame, cv2.COLOR_RGB2BGR)
+                # Display the annotated frame with landmarks and handedness text
+                cv2.imshow("Hand Tracking", frame_bgr)
             else:
-                # If no hands are detected, display the original frame
+                # Display the original frame if no landmarks are detected
                 cv2.imshow("Hand Tracking", frame)
+
+            time.sleep(0.005)
 
             # Check for 'q' or 'ESC' key press to exit the loop
             if cv2.waitKey(1) & 0xFF in [ord('q'), 27]:

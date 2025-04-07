@@ -1,7 +1,8 @@
+# ========== Hand Tracking with MediaPipe Solution (LEGACY API) ==========
 # ===== Import Required Libraries =====
 # OpenCV imports
 import cv2
-# Mediapipe mp solutions imports for hand tracking (Legacy API)
+# Mediapipe mp solutions imports for hand tracking
 import mediapipe.python.solutions.hands as mp_hands
 # MediaPipe Drawing modules for visualization
 import mediapipe.python.solutions.drawing_utils as mp_drawing
