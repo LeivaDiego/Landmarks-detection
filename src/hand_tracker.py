@@ -2,8 +2,6 @@
 # ===== Import Required Libraries =====
 # MediaPipe Hand Tracking task modules
 import mediapipe as mp
-from mediapipe.tasks import python
-from mediapipe.tasks.python import vision
 from mediapipe.framework.formats import landmark_pb2
 # MediaPipe Drawing modules for visualization
 import mediapipe.python.solutions.hands as mp_hands
@@ -22,12 +20,8 @@ FONT_SIZE = 1
 FONT_THICKNESS = 1
 HANDEDNESS_TEXT_COLOR = (88, 205, 54) # vibrant green
 
-# ===== Global Variables =====
-latest_frame_result = None  # Variable to store the latest annotated frame for display
 
 # ===== Hand Tracking with MediaPipe =====
-
-# ===== Hand Landmarks Functions =====
 
 def draw_landmarks(rgb_frame, detection_result):
     """
@@ -109,9 +103,17 @@ def draw_landmarks(rgb_frame, detection_result):
     return annotated_frame
 
 
-def main():
-    global latest_frame_result
-   
+def run_hand_tracker():
+    """
+    Main function to run the hand tracking application using MediaPipe Tasks.
+    
+    This function captures video from the webcam, processes each frame to detect hands,
+    and draws the detected landmarks and handedness on the frame.
+
+    The application runs in a loop until the user presses 'q' or 'ESC' to exit.
+
+    MediaPipe Tasks is the latest high-level API for hand tracking.
+    """   
     # Define the model path for hand tracking
     model_path = 'src/model/hand_landmarker.task'
 
@@ -125,6 +127,9 @@ def main():
     options = HandLandmarkerOptions(
         base_options=BaseOptions(model_asset_path=model_path),  # Path to the model file
         running_mode=VisionRunningMode.IMAGE,                   # Set the running mode to image
+        min_hand_detection_confidence=0.5,                      # Minimum confidence for hand detection
+        min_hand_presence_confidence=0.5,                       # Minimum confidence for hand presence
+        min_tracking_confidence=0.5,                            # Minimum confidence for hand tracking
         num_hands=2                                             # Number of hands to detect (1 or 2)
        )                                                        # no callback function for image mode
 
@@ -176,5 +181,7 @@ def main():
     cv2.destroyAllWindows()
 
 
+
+# Main function to run the hand tracking on webcam
 if __name__ == "__main__":
-    main()
+    run_hand_tracker()

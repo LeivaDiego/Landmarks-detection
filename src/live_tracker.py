@@ -124,7 +124,17 @@ def process_result(result, output_frame, timestamp_ms):
     latest_frame_result = (result, output_frame.numpy_view())
 
 
-def main():
+def run_hand_tracker():
+    """
+    Main function to run the hand tracker using MediaPipe Tasks.
+    
+    This function captures video from the webcam, processes it using the hand landmarker,
+    and displays the annotated frame with landmarks and handedness text.
+    
+    It uses the MediaPipe Tasks API for hand tracking in live stream mode.
+    
+    The application runs in a loop until the user presses 'q' or 'ESC' to exit.
+    """
     global latest_frame_result
    
     # Define the model path for hand tracking
@@ -198,4 +208,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run_hand_tracker()
