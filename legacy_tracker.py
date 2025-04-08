@@ -81,8 +81,8 @@ def run_hand_tracker():
     with mp_hands.Hands(
         model_complexity=1,
         max_num_hands=2,
-        min_detection_confidence=0.5,
-        min_tracking_confidence=0.5
+        min_detection_confidence=0.4,
+        min_tracking_confidence=0.4
     ) as hands:
         # Initialize Mediapipe Drawing module
         while cap.isOpened():
