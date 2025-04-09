@@ -1,4 +1,4 @@
-# Proyecto 2 - Detección de puntos de referencia con MediaPipe
+# Proyecto 2: Detección de puntos de referencia con MediaPipe
 
 **Universidad del Valle de Guatemala**  
 **Facultad de Ingeniería**  
@@ -42,8 +42,8 @@ Los siguientes modelos ya están incluidos en el repositorio:
 - `models/hand_landmarker.task`
 
 Si quisieras otras versiones de los modelos puedes descargarlos desde:
-- [Pose Landmarker Models](https://developers.google.com/mediapipe/solutions/vision/pose_landmarker)
-- [Hand Landmarker Models](https://developers.google.com/mediapipe/solutions/vision/hand_landmarker)
+- [Pose Landmarker Models](https://developers.google.com/mediapipe/solutions/vision/pose_landmarker#models)
+- [Hand Landmarker Models](https://developers.google.com/mediapipe/solutions/vision/hand_landmarker#models)
 
 
 ### 1. Detección de poses en video
@@ -58,7 +58,7 @@ python pose_detector.py --input input/video.mp4 --output output/resultado.mp4
 - `--output`: Ruta del video de salida. Por defecto, se utiliza `output/pose_tracking_output.mp4.
 
 
-> ![IMPORTANT]
+> [!IMPORTANT]
 > - El archivo de entrada debe tener extensión `.mp4`.
 > - El archivo de salida también debe tener extensión `.mp4`.
 
@@ -73,7 +73,7 @@ python hand_tracker.py --hands 2
 **Parámetros:**
 - `--hands`: número máximo de manos a detectar (entre 1 y 10). Por defecto: `2`.
 
-> ![NOTE]
+> [!NOTE]
 > - Usa la cámara web predeterminada (`cv2.VideoCapture(0)`).
 > - Presiona `q` o `ESC` para salir.
 
