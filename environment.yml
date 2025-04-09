@@ -1,4 +1,4 @@
-name: HandTracker
+name: MP-Tracker
 channels:
   - defaults
 dependencies:
@@ -46,4 +46,4 @@ dependencies:
       - sentencepiece==0.2.0
       - six==1.17.0
       - sounddevice==0.5.1
-prefix: C:\Users\diego\miniconda3\envs\HandTracker
+prefix: C:\Users\diego\miniconda3\envs\MP-Tracker
