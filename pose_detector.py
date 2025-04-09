@@ -2,11 +2,9 @@
 # ===== Import Required Libraries =====
 # MediaPipe Pose Tracking task modules
 import mediapipe as mp
-from mediapipe.tasks import python
-from mediapipe.tasks.python import vision
-from mediapipe.framework.formats import landmark_pb2
-# MediaPipe Drawing modules for visualization
 import mediapipe.python.solutions.pose as mp_pose
+# MediaPipe Drawing modules for visualization
+from mediapipe.framework.formats import landmark_pb2
 import mediapipe.python.solutions.drawing_utils as mp_drawing
 import mediapipe.python.solutions.drawing_styles as mp_drawing_styles
 # OpenCV import for video capture and display
@@ -41,7 +39,6 @@ def draw_landmarks(rgb_image, detection_result):
 		Exception: For any other exceptions that may occur during processing.
 	"""
 	try:
-
 		pose_landmarks_list = detection_result.pose_landmarks     # List of detected poses with landmarks
 		
 		# Initialize a new image to draw the landmarks on, based on the original RGB frame
@@ -171,7 +168,12 @@ def init_pose_landmarker(model_path='models/pose_landmarker_heavy.task'):
 		
 		# Create the pose landmarker with the defined options
 		pose_landmarker = PoseLandmarker.create_from_options(options)
-
+	
+	# Handle exceptions during the initialization process
+	except FileNotFoundError as e:
+		# Handle the case where the model file is not found
+		print(f"ERROR: Model file not found - {e}")
+		
 	except Exception as e:
 		# Handle any exceptions that occur during initialization
 		print(f"ERROR: Failed to initialize pose landmarker - {e}")
@@ -199,7 +201,7 @@ def run_pose_tracker(input_path, output_path='output/pose_tracking_output.mp4'):
 
 	try:
 		# Initialize the pose landmarker with the model path
-		pose_landmarker = init_pose_landmarker('models/pose_landmarker_heavy.task')
+		pose_landmarker = init_pose_landmarker()
 		
 		# Initialize the VideoCapture object to capture video from the input path
 		cap = cv2.VideoCapture(input_path)
@@ -230,8 +232,6 @@ def run_pose_tracker(input_path, output_path='output/pose_tracking_output.mp4'):
 			if not success:
 				break
 
-			frame_idx += 1	# Increment the frame index
-
 			# Convert the frame to RGB format for pose detection
 			rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
@@ -247,7 +247,7 @@ def run_pose_tracker(input_path, output_path='output/pose_tracking_output.mp4'):
 			# Check if the detection result is valid
 			if detection_result is None:
 				# If no pose landmarks are detected
-				print(f"WARNING: Frame {frame_idx} - No pose detected.")
+				tqdm.write(f"WARNING: Frame {frame_idx} - No pose detected.")
 				# Write the original frame to the output video if no pose is detected
 				out_writer.write(frame)
 			else:
@@ -286,7 +286,7 @@ def run_pose_tracker(input_path, output_path='output/pose_tracking_output.mp4'):
 	
 	# Ensure that the video capture and writer objects are released properly
 	finally:
-		cap.release()			# Release capture device
+		cap.release()			
 		out_writer.release() 	# Release video Writer
 		cv2.destroyAllWindows()	# Close all OpenCV windows
 		progress_bar.close()	# Close the progress bar
