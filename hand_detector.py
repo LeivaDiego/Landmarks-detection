@@ -72,8 +72,8 @@ def draw_landmarks(rgb_frame, detection_result):
     # Handle exceptions related to the detection result
     except (AttributeError, IndexError, TypeError) as e:
         # Handle exceptions related to the detection result
-        print(f"WARNING: Failed to draw landmarks due to malformed data: {e}")
-    
+        print(f"ERROR: Failed to draw landmarks due to malformed data - {e}")
+
     except Exception as e:
         # Handle any other exceptions
         print(f"EXCEPTION: {e}")
