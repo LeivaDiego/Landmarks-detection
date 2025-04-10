@@ -159,10 +159,10 @@ def init_pose_landmarker(model_path='models/pose_landmarker_heavy.task'):
 		options = PoseLandmarkerOptions(
 			base_options=BaseOptions(model_asset_path=model_path),		# Path to the model
 			running_mode=VisionRunningMode.VIDEO,						# Running mode for video
-			num_poses=2,												# Number of poses to detect
-			min_pose_detection_confidence=0.5,							# Minimum confidence for pose detection
-			min_pose_presence_confidence=0.5,							# Minimum confidence for pose presence
-			min_tracking_confidence=0.5,								# Minimum confidence for tracking
+			num_poses=3,												# Number of poses to detect
+			min_pose_detection_confidence=0.6,							# Minimum confidence for pose detection
+			min_pose_presence_confidence=0.7,							# Minimum confidence for pose presence
+			min_tracking_confidence=0.7,								# Minimum confidence for tracking
 			output_segmentation_masks=False								# Whether to output segmentation masks
 			)
 		
